@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог книг</title>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!-- Stylesheets-->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,500,600,700%7CPoppins:400%7CTeko:300,400">
+    <link href="/css/bootstrap.css" rel="stylesheet" />
+    <link href="/css/fonts.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <style>
+        .ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;}
+        html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}
+        .dropdown-menu {
+            padding: 15px 20px; /* Padding inside dropdown items */
+            width: 150px; /* Width of the dropdown menu */
+        }
+        .dropdown-item {
+            font-size: 18px; /* Font size of dropdown items */
+            padding: 10px 0; /* Padding for each dropdown item */
+        }
+        #book-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Space between books */
+        }
+        .book-item {
+            flex: 1 1 calc(20% - 20px); /* Five items per row with space */
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            text-align: center;
+        }
+        .book-item h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .book-item p {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="preloader">
+    <div class="preloader-body">
+        <div class="cssload-container">
+            <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Завантаження...</p>
+    </div>
+</div>
+<div class="page">
+    <header class="section page-header">
+        <!-- RD Navbar -->
+        <div class="rd-navbar-wrap" style="height: auto;">
+            <nav class="rd-navbar rd-navbar-corporate rd-navbar-original rd-navbar-static" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="46px" data-xl-stick-up-offset="46px" data-xxl-stick-up-offset="106px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+                <div class="rd-navbar-collapse-toggle rd-navbar-fixed-element-1 toggle-original" data-rd-navbar-toggle=".rd-navbar-collapse"><span></span></div>
+                <div class="rd-navbar-aside-outer">
+                    <div class="rd-navbar-aside">
+                        <!-- RD Navbar Panel -->
+                        <div class="rd-navbar-panel">
+                            <!-- RD Navbar Toggle -->
+                            <button class="rd-navbar-toggle toggle-original" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                            <!-- RD Navbar Brand -->
+                            <div class="rd-navbar-brand">
+                                <!--Brand--><a class="brand" href="home"><img src="images/logo-default-450x37.png" alt="" width="225" height="18"></a>
+                            </div>
+                        </div>
+                        <div class="rd-navbar-aside-right rd-navbar-collapse toggle-original-elements">
+                            <ul class="rd-navbar-corporate-contacts">
+                                <li>
+                                    <div class="unit unit-spacing-xs">
+                                        <div class="unit-left"><span class="icon fa fa-clock-o"></span></div>
+                                        <div class="unit-body">
+                                            <p>10:00 — 18:00</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="unit unit-spacing-xs">
+                                        <div class="unit-left"><span class="icon fa fa-phone"></span></div>
+                                        <div class="unit-body"><a class="link-phone" href="tel:#">+38(063)-515-3993</a></div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <a class="button button-md button-default-outline-2 button-ujarak" href="#">Зробити замовлення</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="rd-navbar-main-outer">
+                    <div class="rd-navbar-main">
+                        <div class="rd-navbar-nav-wrap toggle-original-elements">
+                            <ul class="list-inline list-inline-md rd-navbar-corporate-list-social">
+                                <li><a class="icon fa fa-facebook" href="https://www.facebook.com/"></a></li>
+                                <li><a class="icon fa fa-twitter" href="https://x.com/"></a></li>
+                                <li><a class="icon fa fa-instagram" href="https://www.instagram.com/"></a></li>
+                                <li th:if="${session.username != null}" class="rd-nav-item">
+                                    <a class="rd-nav-link dropdown-toggle" href="profile" th:text="${session.username}"></a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="logout">Вихід</a>
+                                        <a class="dropdown-item" href="orders">Замовлення</a>
+                                        <a th:if="${session.username != null && session.roles != null && session.roles.contains('ROLE_ADMIN')}" class="dropdown-item" href="admin">Admin Panel</a>
+
+                                    </div>
+                                </li>
+                                <li th:if="${session.username == null}" class="rd-nav-item">
+                                    <a class="rd-nav-link" href="login">Вхід</a>
+                                </li>
+                            </ul>
+                            <!-- Навігація-->
+                            <ul class="rd-navbar-nav">
+                                <li class="rd-nav-item active"><a class="rd-nav-link" href="catalog">Головна</a></li>
+                                <li class="rd-nav-item"><a class="rd-nav-link" href="about">Про нас</a></li>
+                                <li class="rd-nav-item"><a class="rd-nav-link" href="contact-us">Контактна інформація</a></li>
+                                <li class="rd-nav-item"><a class="rd-nav-link" href="catalog">Каталог</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section section-lg section-top-1 bg-gray-4">
+        <div class="container">
+            <h1>Каталог книг</h1>
+            <div class="row" id="book-list">
+
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    $(document).ready(function() {
+        // AJAX request to load books dynamically
+        $.ajax({
+            url: '/api/books',
+            method: 'GET',
+            success: function(data) {
+                $('#book-list').empty(); // Clear existing content
+                $.each(data, function(index, book) {
+                    var bookHtml = '<div class="book-item"><h2>' + book.title + '</h2><p>' + book.author + '</p><p>' + book.price + '</p></div>';
+                    $('#book-list').append(bookHtml); // Append new content
+                });
+                $('.preloader').fadeOut(500); // Hide preloader
+
+            },
+            error: function(err) {
+                console.error('Помилка завантаження книг', err);
+            }
+        });
+    });
+        // Dropdown toggle
+    $('.rd-nav-link.dropdown-toggle').click(function(e) {
+        e.preventDefault();
+        $(this).next('.dropdown-menu').toggle();
+    });
+
+    // Close dropdown on outside click
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.rd-nav-item').length) {
+            $('.dropdown-menu').hide();
+        }
+    });
+</script>
+</body>
+</html>

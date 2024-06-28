@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!-- Stylesheets-->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,500,600,700%7CPoppins:400%7CTeko:300,400">
+    <link href="/css/bootstrap.css" rel="stylesheet" />
+    <link href="/css/fonts.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <style>
+        .ie-panel { display: none; background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align: center; position: relative; z-index: 1; }
+        html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel { display: block; }
+        #book-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Space between books */
+        }
+        .book-item {
+            flex: 1 1 calc(20% - 20px); /* Five items per row with space */
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            text-align: center;
+        }
+        .book-item h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .book-item p {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .nav-link, .add-book-link {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .nav-link {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .add-book-link {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .nav-link:hover, .add-book-link:hover {
+            opacity: 0.8;
+        }
+        .header-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <div class="header-buttons">
+        <a class="nav-link" href="home">Головна</a>
+        <a class="add-book-link" href="/admin/books/add">Додати книгу</a>
+    </div>
+    <h1>Welcome, Admin!</h1>
+    <section class="section section-lg section-top-1 bg-gray-4">
+        <div class="container">
+            <h1>Каталог книг</h1>
+            <div class="row" id="book-list">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // AJAX request to load books dynamically
+        $.ajax({
+            url: '/api/books',
+            method: 'GET',
+            success: function(data) {
+                $('#book-list').empty(); // Clear existing content
+                $.each(data, function(index, book) {
+                    var bookHtml = '<div class="book-item"><h2>' + book.title + '</h2><p>' + book.author + '</p><p>' + book.price + '</p>';
+                    bookHtml += '<a href="/admin/books/update/' + book.id + '">Оновити</a> | ';
+                    bookHtml += '<a href="#" onclick="deleteBook(' + book.id + ')">Видалити</a></div>';
+                    $('#book-list').append(bookHtml); // Append new content
+                });
+            },
+            error: function(err) {
+                console.error('Помилка завантаження книг', err);
+            }
+        });
+
+        // Function to delete a book
+        window.deleteBook = function(bookId) {
+            if (confirm('Ви впевнені, що хочете видалити цю книгу?')) {
+                $.ajax({
+                    url: '/api/books/' + bookId,
+                    method: 'DELETE',
+                    success: function() {
+                        // Reload the book list after deletion
+                        location.reload();
+                    },
+                    error: function(err) {
+                        console.error('Помилка видалення книги', err);
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

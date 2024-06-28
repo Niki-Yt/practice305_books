@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Додати книгу</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Додати нову книгу</h1>
+
+    <form th:action="@{/admin/books/add}" method="post" th:object="${book}" onsubmit="submitForm()">
+        <div class="form-group">
+            <label for="title">Назва книги:</label>
+            <input type="text" class="form-control" id="title" name="title" th:field="*{title}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="author">Автор:</label>
+            <input type="text" class="form-control" id="author" name="author" th:field="*{author}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Ціна:</label>
+            <input type="number" class="form-control" id="price" name="price" th:field="*{price}" step="0.01" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Додати книгу</button>
+    </form>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

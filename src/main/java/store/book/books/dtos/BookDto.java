@@ -1,0 +1,12 @@
+package store.book.books.dtos;
+
+import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+@Data
+public class BookDto {
+    private Long id;
+    private String title;
+    private String author;
+    private Double price;
+}
